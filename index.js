@@ -1,8 +1,9 @@
 const EE = require("events").EventEmitter
 
-function PullQueue(through) {
+function PullQueue(through, opt) {
   let ee = new EE()
   let q = []
+  if (!opt) opt = {}
   return {
     sink: function (read) {
       read(null, function next(end, data) {
@@ -12,8 +13,18 @@ function PullQueue(through) {
             return read(end)
           }
           if (data) {
-            q.push(data)
-            ee.emit("data")
+            if (opt.sendMany) {
+              if (Array.isArray(data)) {
+                q = q.concat(data)
+                if (data.length) ee.emit("data")
+              } else {
+                q.push(data)
+                ee.emit("data")                
+              }
+            } else {
+              q.push(data)
+              ee.emit("data")
+            }
           }
         })
       })

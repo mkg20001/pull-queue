@@ -1,7 +1,7 @@
 {
   "name": "pull-queue",
-  "version": "0.0.1-alphapre",
-  "description": "Queue for pull-streams",
+  "version": "0.1.0",
+  "description": "Pull stream with queue",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,5 +12,13 @@
     "async"
   ],
   "author": "Maciej Krüger <mkg20001@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mkg20001/pull-queue.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mkg20001/pull-queue/issues"
+  },
+  "homepage": "https://github.com/mkg20001/pull-queue#readme"
 }
