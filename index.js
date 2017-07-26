@@ -19,13 +19,14 @@ function PullQueue(through, opt) {
                 if (data.length) ee.emit("data")
               } else {
                 q.push(data)
-                ee.emit("data")                
+                ee.emit("data")
               }
             } else {
               q.push(data)
               ee.emit("data")
             }
           }
+          return read(null, next)
         })
       })
     },
