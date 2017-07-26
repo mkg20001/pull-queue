@@ -1,0 +1,16 @@
+{
+  "name": "pull-queue",
+  "version": "0.0.1-alphapre",
+  "description": "Queue for pull-streams",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "pull-stream",
+    "queue",
+    "async"
+  ],
+  "author": "Maciej Krüger <mkg20001@gmail.com>",
+  "license": "MIT"
+}
