@@ -10,7 +10,7 @@ function PullQueue(through, opt) {
         through(end, data, function (end, data) {
           if (end) {
             ee.emit("err", end)
-            return read(end, () => {})
+            return end
           }
           if (data) {
             if (opt.sendMany) {

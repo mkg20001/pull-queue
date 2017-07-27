@@ -49,6 +49,7 @@ describe("pull-queue", () => {
       pull(
         pull.values(["1", "2", "3"]),
         queue(function (end, data, cb) { //this will only allow valid data to pass through
+          if (end) return cb(end)
           cb(null, data)
         }, {
           sendMany: true
