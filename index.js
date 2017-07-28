@@ -4,6 +4,12 @@ function PullQueue(through, opt) {
   let ee = new EE()
   let q = []
   if (!opt) opt = {}
+
+  function unleak() {
+    ee.removeAllListeners("err")
+    ee.removeAllListeners("data")
+  }
+
   return {
     sink: function (read) {
       read(null, function next(end, data) {
@@ -33,7 +39,10 @@ function PullQueue(through, opt) {
     source: function src(end, cb) {
       if (end) return cb(end)
 
+      unleak()
+
       function doSend() {
+        unleak()
         cb(null, q.shift())
       }
       if (q.length) return doSend()
