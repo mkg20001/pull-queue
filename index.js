@@ -1,55 +1,51 @@
-const EE = require("events").EventEmitter
+"use strict"
+
+const queue = require("data-queue")
 
 function PullQueue(through, opt) {
-  let ee = new EE()
-  let q = []
   if (!opt) opt = {}
 
-  function unleak() {
-    ee.removeAllListeners("err")
-    ee.removeAllListeners("data")
-  }
+  const q = queue()
 
   return {
     sink: function (read) {
       read(null, function next(end, data) {
         through(end, data, function (end, data) {
-          if (end) {
-            ee.emit("err", end)
-            return end
-          }
-          if (data) {
+
+          if (typeof data != "undefined") {
             if (opt.sendMany) {
               if (Array.isArray(data)) {
-                q = q.concat(data)
-                if (data.length) ee.emit("data")
+                data.forEach(data => q.append({
+                  data
+                }))
               } else {
-                q.push(data)
-                ee.emit("data")
+                q.append({
+                  data
+                })
               }
             } else {
-              q.push(data)
-              ee.emit("data")
+              q.append({
+                data
+              })
             }
           }
-          return read(null, next)
+          if (end) {
+            q.append({
+              end
+            })
+          } else {
+            return read(null, next)
+          }
         })
       })
     },
     source: function src(end, cb) {
       if (end) return cb(end)
 
-      unleak()
-
-      function doSend() {
-        unleak()
-        cb(null, q.shift())
-      }
-      if (q.length) return doSend()
-      else {
-        ee.once("data", doSend)
-        ee.once("err", e => src(e, cb))
-      }
+      q.get((e, d) => {
+        if (d.end) return cb(d.end)
+        else return cb(null, d.data)
+      })
     }
   }
 }

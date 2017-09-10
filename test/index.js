@@ -1,10 +1,10 @@
 "use strict"
 
-const sinon = require("sinon")
+//const sinon = require("sinon")
 const chai = require("chai")
 chai.use(require("sinon-chai"))
 chai.should()
-const expect = chai.expect
+//const expect = chai.expect
 const assert = require("assert")
 const pull = require("pull-stream")
 const queue = require("..")
@@ -57,6 +57,16 @@ describe("pull-queue", () => {
         pull.drain(d => r.push(d))
       )
       assert.deepEqual(r, ["1", "2", "3"])
+    })
+
+    it("should send the error after the data in one cb", () => {
+      pull(
+        pull.values([0, 1, 2]),
+        queue((end, data, cb) => cb(true, data)),
+        pull.collect((err, data) => {
+          assert.deepEqual(data, [0], "failed test")
+        })
+      )
     })
   })
 })
